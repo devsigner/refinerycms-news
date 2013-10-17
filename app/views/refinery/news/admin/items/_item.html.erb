@@ -1,17 +1,21 @@
 <li class='clearfix record <%= cycle("on", "on-hover") %>'>
   <span class='title'>
-    <%= item.title %>
+    <%= item.title.truncate(50) %>
     <span class="preview">
       <%= t('.published') %> <%= l(item.publish_date, :format => :short) %>
     </span>
+
     <% if defined?(::Refinery::I18n) and ::Refinery::I18n.frontend_locales.many? and
-          (locales = item.translations.collect{|t| t.locale}).present? %>
+            (locales = item.translations.collect{|t| t.locale}).present? %>
       <span class='preview'>
         <% locales.each do |locale| %>
-          <%= refinery_icon_tag "flags/#{locale}.png", :size => '16x11' %>
+          <%= link_to image_tag( "refinery/icons/flags/#{locale}.png", {:width => 16, :height => 11} ),
+                      refinery.edit_news_admin_item_path(item, :switch_locale => locale),
+                      :class => 'locale' %>
         <% end %>
       </span>
     <% end %>
+
   </span>
   <span class='actions'>
     <%= link_to refinery_icon_tag('application_go.png'), refinery.news_item_path(item),
